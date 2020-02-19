@@ -9,4 +9,4 @@ Currently working at [homm3.loskir.ru](https://homm3.loskir.ru)
     - `color` [string] — frame color ("red", "blue" etc.) (defaults to "red")
     - `show_ok` [bool] — whether to show ok button (defaults to true)
     - `show_cancel` [bool] — whether to show cancel button (defaults to false)
-- Response — PNG image
+- Response — PNG image or JSON (if error) 
