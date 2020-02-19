@@ -10,3 +10,6 @@ Currently working at [homm3.loskir.ru](https://homm3.loskir.ru)
     - `show_ok` [bool] — whether to show ok button (defaults to true)
     - `show_cancel` [bool] — whether to show cancel button (defaults to false)
 - Response — PNG image or JSON (if error) 
+
+## Running
+Server starts at port 11001
