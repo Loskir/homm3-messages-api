@@ -1,6 +1,8 @@
 # Homm3 Messages API
 
-Currently working at [homm3.loskir.ru](https://homm3.loskir.ru)
+### Based on [github.com/lehazyo/homm3-messages](https://github.com/lehazyo/homm3-messages)
+
+### Currently working at [homm3.loskir.ru](https://homm3.loskir.ru)
 
 ## Usage
 - `GET`/`POST` request are accepted
