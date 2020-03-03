@@ -9,7 +9,7 @@ const {
   getJpegBuffer,
 
   pngToJpeg,
-  scale,
+  pixelPerfectScale,
 } = require('./functions/core')
 
 const app = express()
@@ -123,7 +123,7 @@ router.all('/bot', [
         cancel: show_cancel === undefined ? false : show_cancel,
       },
       showShadow: false,
-    })).then((result) => scale(result, 2)).then(pngToJpeg)
+    })).then((result) => pixelPerfectScale(result, 4)).then(pngToJpeg)
 
     res.set('Content-Type', 'image/jpeg')
     return res.send(buffer)

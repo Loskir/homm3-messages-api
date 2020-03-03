@@ -20,6 +20,16 @@ const pngToJpeg = (pngBuffer) => {
     .toBuffer()
 }
 
+const pixelPerfectScale = (buffer, factor) => {
+  return sharp(buffer)
+    .metadata()
+    .then(({width}) => sharp(buffer)
+      .resize(Math.round(width * factor), null, {
+        kernel: 'nearest',
+      })
+      .toBuffer()
+    )
+}
 
 const scale = (buffer, factor) => {
   return sharp(buffer)
@@ -39,5 +49,6 @@ module.exports = {
   pngToJpeg,
   getJpegBuffer,
 
+  pixelPerfectScale,
   scale,
 }
