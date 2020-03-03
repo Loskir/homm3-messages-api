@@ -7,6 +7,9 @@ const morgan = require('morgan')
 const {
   getPngBuffer,
   getJpegBuffer,
+
+  pngToJpeg,
+  scale,
 } = require('./functions/core')
 
 const app = express()
@@ -99,7 +102,32 @@ router.all('/jpeg', [
 
     res.set('Content-Type', 'image/jpeg')
     return res.send(buffer)
-  }
+  },
+])
+
+router.all('/bot', [
+  processQuery,
+  checkColors,
+  async (req, res) => {
+    const {
+      text,
+      color,
+      show_ok,
+      show_cancel,
+    } = res.locals
+
+    const buffer = await Promise.resolve(getPngBuffer(text, {
+      color,
+      buttons_show: {
+        ok: show_ok === undefined ? true : show_ok,
+        cancel: show_cancel === undefined ? false : show_cancel,
+      },
+      showShadow: false,
+    })).then((result) => scale(result, 2)).then(pngToJpeg)
+
+    res.set('Content-Type', 'image/jpeg')
+    return res.send(buffer)
+  },
 ])
 
 app.use(router)

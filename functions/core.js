@@ -19,6 +19,17 @@ const pngToJpeg = (pngBuffer) => {
     .toFormat(sharp.format.jpeg)
     .toBuffer()
 }
+
+
+const scale = (buffer, factor) => {
+  return sharp(buffer)
+    .metadata()
+    .then(({width}) => sharp(buffer)
+      .resize(Math.round(width * factor))
+      .toBuffer()
+    )
+}
+
 const getJpegBuffer = (text, config) => pngToJpeg(getPngBuffer(text, config))
 
 module.exports = {
@@ -27,4 +38,6 @@ module.exports = {
   getWebpBuffer,
   pngToJpeg,
   getJpegBuffer,
+
+  scale,
 }
