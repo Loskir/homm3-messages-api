@@ -14,9 +14,17 @@ const pngToWebp = (pngBuffer) => {
     .toBuffer()
 }
 const getWebpBuffer = (text, config) => pngToWebp(getPngBuffer(text, config))
+const pngToJpeg = (pngBuffer) => {
+  return sharp(pngBuffer)
+    .toFormat(sharp.format.jpeg)
+    .toBuffer()
+}
+const getJpegBuffer = (text, config) => pngToJpeg(getPngBuffer(text, config))
 
 module.exports = {
   getPngBuffer,
   pngToWebp,
   getWebpBuffer,
+  pngToJpeg,
+  getJpegBuffer,
 }

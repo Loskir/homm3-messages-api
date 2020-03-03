@@ -6,6 +6,7 @@ const morgan = require('morgan')
 
 const {
   getPngBuffer,
+  getJpegBuffer,
 } = require('./functions/core')
 
 const app = express()
@@ -26,7 +27,7 @@ app.use((req, res, next) => {
   return next()
 })
 
-app.use(async (req, res) => {
+const processQuery = (req, res, next) => {
   const {
     text = '',
   } = req.body
@@ -37,15 +38,29 @@ app.use(async (req, res) => {
     show_cancel,
   } = req.body
 
+  res.locals = {
+    ...res.locals,
+    text,
+    color,
+    show_ok,
+    show_cancel,
+  }
+
+  return next()
+}
+
+const checkColors = (req, res, next) => {
+  const {color} = res.locals
+
   const colors = [
-    "red",
-    "blue",
-    "brown",
-    "green",
-    "orange",
-    "violet",
-    "teal",
-    "pink",
+    'red',
+    'blue',
+    'brown',
+    'green',
+    'orange',
+    'violet',
+    'teal',
+    'pink',
   ]
 
   if (!colors.includes(color)) {
@@ -58,18 +73,61 @@ app.use(async (req, res) => {
     })
   }
 
-  const buffer = await getPngBuffer(text, {
-    color,
-    buttons_show: {
-      ok: show_ok === undefined ? true : show_ok,
-      cancel: show_cancel === undefined ? false : show_cancel,
-    },
-    showShadow: false,
-  })
+  return next()
+}
 
-  res.set('Content-Type', 'image/png')
-  return res.send(buffer)
-})
+const router = express.Router()
+router.all('/jpeg', [
+  processQuery,
+  checkColors,
+  async (req, res) => {
+    const {
+      text,
+      color,
+      show_ok,
+      show_cancel,
+    } = res.locals
+
+    const buffer = await getJpegBuffer(text, {
+      color,
+      buttons_show: {
+        ok: show_ok === undefined ? true : show_ok,
+        cancel: show_cancel === undefined ? false : show_cancel,
+      },
+      showShadow: false,
+    })
+
+    res.set('Content-Type', 'image/jpeg')
+    return res.send(buffer)
+  }
+])
+
+app.use(router)
+
+app.use([
+  processQuery,
+  checkColors,
+  async (req, res) => {
+    const {
+      text,
+      color,
+      show_ok,
+      show_cancel,
+    } = res.locals
+
+    const buffer = await getPngBuffer(text, {
+      color,
+      buttons_show: {
+        ok: show_ok === undefined ? true : show_ok,
+        cancel: show_cancel === undefined ? false : show_cancel,
+      },
+      showShadow: false,
+    })
+
+    res.set('Content-Type', 'image/png')
+    return res.send(buffer)
+  }
+])
 
 app.use(function (err, req, res, next) {
   console.error(err)
